@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="synapsensegraph" default="all">
+  
+  <!-- Uncomment the following property if no tests compilation is needed -->
+  <!-- 
+  <property name="skip.tests" value="true"/>
+   -->
+  
+  <!-- Compiler options -->
+  
+  <property name="compiler.debug" value="on"/>
+  <property name="compiler.generate.no.warnings" value="off"/>
+  <property name="compiler.args" value=""/>
+  <property name="compiler.max.memory" value="128m"/>
+  <patternset id="ignored.files">
+    <exclude name="**/.git/**"/>
+    <exclude name="**/.idea/**"/>
+    <exclude name="**/json/**"/>
+    <exclude name="**/SynapSenseGraph.iml"/>
+  </patternset>
+  <patternset id="library.patterns">
+    <include name="*.zip"/>
+    <include name="*.apk"/>
+    <include name="*.war"/>
+    <include name="*.egg"/>
+    <include name="*.ear"/>
+    <include name="*.ane"/>
+    <include name="*.swc"/>
+    <include name="*.jar"/>
+  </patternset>
+  <patternset id="compiler.resources">
+    <exclude name="**/?*.java"/>
+    <exclude name="**/?*.form"/>
+    <exclude name="**/?*.class"/>
+    <exclude name="**/?*.groovy"/>
+    <exclude name="**/?*.scala"/>
+    <exclude name="**/?*.flex"/>
+    <exclude name="**/?*.kt"/>
+    <exclude name="**/?*.clj"/>
+  </patternset>
+  
+
+  <!-- Properties -->
+
+  <property name="output.dir" value="${basedir}/out/graph"/>
+  <property name="testoutput.dir" value="${basedir}/out/test"/>
+
+  <!-- Class Paths -->
+
+  <path id="bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+
+  <path id="graph.classpath">
+    <path refid="library.com.googlecode.json-simple:json-simple:1.1.1.classpath"/>
+  </path>
+
+  <path id="graph.sourcepath">
+    <dirset dir="${basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+
+  <path id="library.com.googlecode.json-simple:json-simple:1.1.1.classpath">
+    <pathelement location="${basedir}/lib/hamcrest-core-1.1.jar"/>
+    <pathelement location="${basedir}/lib/json-simple-1.1.1.jar"/>
+    <pathelement location="${basedir}/lib/junit-4.10.jar"/>
+  </path>
+
+  <!-- jUnit -->
+  <path id="jUnitClasspath">
+    <pathelement location="${output.dir}" />
+    <pathelement location="${testoutput.dir}"/>
+  </path>
+
+
+  <!-- Targets -->
+
+  <target name="init" description="Build initialization">
+    <!-- Perform any build initialization in this target -->
+  </target>
+
+
+  <target name="clean" description="Cleanup All">
+    <delete dir="${output.dir}"/>
+    <delete dir="${testoutput.dir}"/>
+  </target>
+
+
+  <target name="test" description="Run all JUnit tests" depends="compile">
+    <mkdir dir="${testoutput.dir}"/>
+    <echo message="${output.dir}"/>
+    <junit printsummary="yes" haltonfailure="no">
+      <classpath refid="jUnitClasspath"/>
+      <classpath refid="library.com.googlecode.json-simple:json-simple:1.1.1.classpath"/>
+      <formatter type="xml"/>
+      <batchtest fork="no" todir="${testoutput.dir}">
+        <fileset dir="${basedir}/src">
+          <include name="**/*Test.java"/>
+        </fileset>
+      </batchtest>
+    </junit>
+    <junitreport todir="${testoutput.dir}">
+      <fileset dir="${testoutput.dir}">
+        <include name="TEST-*.xml"/>
+      </fileset>
+      <report todir="${testoutput.dir}" format="frames"/>
+    </junitreport>
+  </target>
+
+
+  <target name="compile" depends="compile.tests" description="Compile All">
+    <mkdir dir="${output.dir}"/>
+    <javac destdir="${output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true">
+      <compilerarg line="${compiler.args}"/>
+      <bootclasspath refid="bootclasspath"/>
+      <classpath refid="graph.classpath"/>
+      <src refid="graph.sourcepath"/>
+      <patternset refid="ignored.files"/>
+    </javac>
+
+    <copy todir="${output.dir}">
+      <fileset dir="${basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+
+  <target name="compile.tests" description="Compile test classes" unless="skip.tests"/>
+
+  <target name="build" depends="init, clean, compile" description="Build All"/>
+  
+  <target name="all" depends="build, test" description="Build and run tests"/>
+</project>

@@ -1,0 +1,115 @@
+{
+  "vertices":[
+    {
+      "location":{"x":10, "y":10},
+      "name":"A"
+    },
+    {
+      "location":{"x":20, "y":40},
+      "name":"B"
+    },
+    {
+      "location":{"x":30, "y":20},
+      "name":"C"
+    },
+    {
+      "location":{"x":50, "y":40},
+      "name":"D"
+    },
+    {
+      "location":{"x":60, "y":60},
+      "name":"E"
+    },
+    {
+      "location":{"x":50, "y":30},
+      "name":"F"
+    },
+    {
+      "location":{"x":60, "y":70},
+      "name":"G"
+    },
+    {
+      "location":{"x":70, "y":50},
+      "name":"H"
+    }
+  ],
+  "edges":[
+    {
+      "from":"A",
+      "to":"B",
+      "label":"A->B",
+      "weight":3,
+      "directed":true
+    },
+    {
+      "from":"A",
+      "to":"C",
+      "label":"A->C",
+      "weight":1,
+      "directed":true
+    },
+    {
+      "from":"C",
+      "to":"B",
+      "label":"C->B",
+      "weight":1,
+      "directed":true
+    },
+    {
+      "from":"B",
+      "to":"D",
+      "label":"B<->D",
+      "weight":2,
+      "directed":false
+    },
+    {
+      "from":"D",
+      "to":"E",
+      "label":"D->E",
+      "weight":10,
+      "directed":true
+    },
+    {
+      "from":"D",
+      "to":"F",
+      "label":"D->F",
+      "weight":1,
+      "directed":true
+    },
+    {
+      "from":"E",
+      "to":"G",
+      "label":"E->G",
+      "weight":1,
+      "directed":true
+    },
+    {
+      "from":"G",
+      "to":"H",
+      "label":"G->H",
+      "weight":1,
+      "directed":true
+    },
+    {
+      "from":"H",
+      "to":"F",
+      "label":"H->F",
+      "weight":1,
+      "directed":true
+    },
+    {
+      "from":"E",
+      "to":"F",
+      "label":"E<->F",
+      "weight":2,
+      "directed":false
+    },
+    {
+      "from":"G",
+      "to":"F",
+      "label":"G<->F",
+      "weight":2,
+      "directed":false
+    }
+  ]
+}

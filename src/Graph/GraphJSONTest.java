@@ -1,6 +1,5 @@
 package Graph;
 
-import Graph.GraphImpl;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
@@ -9,20 +8,20 @@ import java.util.Stack;
 
 public class GraphJSONTest extends TestCase {
 
-  private GraphImpl graph = null;
+  private Graph graph = null;
 
   public void setUp () throws Exception {
 
     super.setUp();
 
-    graph = new GraphImpl();
+    graph = GraphFactory.createGraph();
   }
 
   public void tearDown () throws Exception {
 
   }
 
-  private void printPath(Vertex from, Vertex to, Stack<Edge> path) {
+  private void printPath (Vertex from, Vertex to, Stack<Edge> path) {
 
     System.out.print("Path from ");
     System.out.print(from.getName());
@@ -41,6 +40,7 @@ public class GraphJSONTest extends TestCase {
   }
 
   public void testGraphA () throws Exception {
+
     FileReader in = new FileReader("json/GraphA.json");
     assertTrue(graph.load(in));
     in.close();
@@ -82,6 +82,7 @@ public class GraphJSONTest extends TestCase {
   }
 
   public void testBadJSON () throws Exception {
+
     FileReader in = new FileReader("json/BadGraph.json");
     in.close();
     assertFalse(graph.load(in));

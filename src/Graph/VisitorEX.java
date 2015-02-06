@@ -9,6 +9,6 @@ interface VisitorEX<E extends Exception> {
    * @param v - The vertex being visited.
    * @throws E exception for any error
    */
-  public void visiting (Graph g, VertexImpl v) throws E;
+  public void visiting (Graph g, VertexIfc v) throws E;
 
 }

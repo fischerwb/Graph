@@ -84,7 +84,7 @@ public class VertexTest extends SimpleBaseTestCase {
 
   public void testAddRemoveEdge () throws Exception {
 
-    EdgeImpl newEdge = EdgeImpl.createEdge(to, from, CHANGED_LABEL, CHANGED_WEIGHT, DIRECTED);
+    EdgeIfc newEdge = GraphFactory.createEdge(to, from, CHANGED_LABEL, CHANGED_WEIGHT, DIRECTED);
     from.addEdge(newEdge);
     to.addEdge(newEdge);
 

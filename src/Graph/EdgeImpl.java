@@ -1,23 +1,18 @@
 package Graph;
 
-import org.json.simple.JSONAware;
 import org.json.simple.JSONObject;
 
-class EdgeImpl implements Edge, JSONAware {
+class EdgeImpl implements EdgeIfc {
 
-  private final VertexImpl from;
+  private final VertexIfc from;
 
-  private final VertexImpl to;
+  private final VertexIfc to;
 
   private String label;
 
   private int weight;
 
   private final boolean directed;
-
-  public static EdgeImpl createEdge(VertexImpl f, VertexImpl t, String l, int w, boolean d) {
-    return new EdgeImpl(f, t, l, w, d);
-  }
 
   /**
    * Create an edge between f and t with label l, weight w, and directed flag set to d
@@ -27,7 +22,7 @@ class EdgeImpl implements Edge, JSONAware {
    * @param w - The weight of the edge
    * @param d - True if the edge has a direction, false if bidirectional
    */
-  private EdgeImpl (VertexImpl f, VertexImpl t, String l, int w, boolean d) {
+  EdgeImpl (VertexIfc f, VertexIfc t, String l, int w, boolean d) {
 
     from = f;
     to = t;
@@ -166,7 +161,8 @@ class EdgeImpl implements Edge, JSONAware {
    *
    * @return The ending vertex for this edge
    */
-  VertexImpl to () {
+  @Override
+  public VertexIfc to () {
 
     return to;
   }
@@ -176,7 +172,8 @@ class EdgeImpl implements Edge, JSONAware {
    *
    * @return The starting vertex for this edge
    */
-  VertexImpl from () {
+  @Override
+  public VertexIfc from () {
 
     return from;
   }

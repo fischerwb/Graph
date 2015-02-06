@@ -1,7 +1,5 @@
 package Graph;
 
-import Graph.EdgeImpl;
-import Graph.VertexImpl;
 import junit.framework.TestCase;
 
 import java.awt.*;
@@ -23,17 +21,17 @@ public class SimpleBaseTestCase extends TestCase {
   static final Point TO_LOCATION = new Point(20, 1);
   static final Point CHANGED_TO_LOCATION = new Point(1, 20);
 
-  EdgeImpl edge;
-  VertexImpl from;
-  VertexImpl to;
+  EdgeIfc edge;
+  VertexIfc from;
+  VertexIfc to;
 
   public void setUp () throws Exception {
 
     super.setUp();
 
-    from = VertexImpl.createVertex(FROM_NAME, FROM_LOCATION, "");
-    to = VertexImpl.createVertex(TO_NAME, TO_LOCATION, "");
-    edge = EdgeImpl.createEdge(from, to, LABEL, WEIGHT, DIRECTED);
+    from = GraphFactory.createVertex(FROM_NAME, FROM_LOCATION, "");
+    to = GraphFactory.createVertex(TO_NAME, TO_LOCATION, "");
+    edge = GraphFactory.createEdge(from, to, LABEL, WEIGHT, DIRECTED);
 
     from.addEdge(edge);
     to.addEdge(edge);

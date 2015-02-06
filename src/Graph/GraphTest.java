@@ -22,13 +22,14 @@ public class GraphTest extends TestCase {
     between 1 and 4.
    */
 
-  private GraphImpl graph = null;
+  private GraphIfc graph = null;
 
   public void setUp () throws Exception {
 
     super.setUp();
 
-    graph = new GraphImpl();
+    // Uses package private constructor instead of graph factory because it needs access to internal interface
+    graph = GraphFactory.createTestGraph();
 
     int i;
     Vertex first = null;
@@ -362,7 +363,7 @@ public class GraphTest extends TestCase {
 
   }
 
-  public void testPaths() throws Exception {
+  public void testPaths () throws Exception {
 
     Vertex one = graph.getVertex(VERTEX_NAME_PREFIX + "1");
     Vertex two = graph.getVertex(VERTEX_NAME_PREFIX + "2");

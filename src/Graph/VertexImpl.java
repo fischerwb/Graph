@@ -1,7 +1,6 @@
 package Graph;
 
 import org.json.simple.JSONArray;
-import org.json.simple.JSONAware;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -11,11 +10,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-class VertexImpl implements Vertex, JSONAware, VisitAware {
+class VertexImpl implements VertexIfc {
 
-  private final List<EdgeImpl> incomingEdges;
+  private final List<EdgeIfc> incomingEdges;
 
-  private final List<EdgeImpl> outgoingEdges;
+  private final List<EdgeIfc> outgoingEdges;
 
   private final String name;
 
@@ -25,10 +24,6 @@ class VertexImpl implements Vertex, JSONAware, VisitAware {
 
   private boolean visited;
 
-  public static VertexImpl createVertex(String n, Point l, String d) {
-    return new VertexImpl(n, l, d);
-  }
-
   /**
    * Create a Vertex with name n, location l, and given data
    *
@@ -36,7 +31,7 @@ class VertexImpl implements Vertex, JSONAware, VisitAware {
    * @param l - location of vertex
    * @param d - data associated with vertex
    */
-  private VertexImpl (String n, Point l, String d) {
+  VertexImpl (String n, Point l, String d) {
 
     incomingEdges = new ArrayList<>();
     outgoingEdges = new ArrayList<>();
@@ -178,7 +173,6 @@ class VertexImpl implements Vertex, JSONAware, VisitAware {
   }
 
   /**
-   *
    * @return True is this object has been visited during the search
    */
   @Override
@@ -211,10 +205,11 @@ class VertexImpl implements Vertex, JSONAware, VisitAware {
    * @param v - The vertex that we are looking for a outgoing edge that connects to
    * @return The outgoing edge going to v if one exists, null otherwise.
    */
-  EdgeImpl find (Vertex v) {
+  @Override
+  public EdgeIfc find (Vertex v) {
 
     if (v != null) {
-      for (EdgeImpl e : outgoingEdges) {
+      for (EdgeIfc e : outgoingEdges) {
         if (e.getTo().equals(v)) {
           return e;
         }
@@ -232,7 +227,8 @@ class VertexImpl implements Vertex, JSONAware, VisitAware {
    * @param e - The edge to add
    * @return true if the edge was added, false otherwise
    */
-  boolean addEdge (EdgeImpl e) {
+  @Override
+  public boolean addEdge (EdgeIfc e) {
 
     if (e != null) {
       if (e.getFrom().equals(this)) {
@@ -255,7 +251,8 @@ class VertexImpl implements Vertex, JSONAware, VisitAware {
    *         to this vertex
    */
 
-  boolean removeEdge (EdgeImpl e) {
+  @Override
+  public boolean removeEdge (EdgeIfc e) {
 
     if (e != null) {
       if (e.getFrom().equals(this)) {
@@ -276,7 +273,8 @@ class VertexImpl implements Vertex, JSONAware, VisitAware {
    * @param graph The graph this vertex is contained in
    * @return true if all the edges are successfully remove, false otherwise
    */
-  boolean removeEdges (GraphImpl graph) {
+  @Override
+  public boolean removeEdges (GraphIfc graph) {
 
     if (graph != null) {
       removeEdges(graph, outgoingEdges.iterator(), false);
@@ -291,7 +289,8 @@ class VertexImpl implements Vertex, JSONAware, VisitAware {
    *
    * @return Incoming edge list
    */
-  List<EdgeImpl> incomingEdges () {
+  @Override
+  public List<EdgeIfc> incomingEdges () {
 
     return incomingEdges;
   }
@@ -301,7 +300,8 @@ class VertexImpl implements Vertex, JSONAware, VisitAware {
    *
    * @return Outgoing edge list
    */
-  List<EdgeImpl> outgoingEdges () {
+  @Override
+  public List<EdgeIfc> outgoingEdges () {
 
     return outgoingEdges;
   }
@@ -330,12 +330,12 @@ class VertexImpl implements Vertex, JSONAware, VisitAware {
    * @param edges - The edge list to create JSON for, can be the outgoing or incoming edges
    * @return The JSONArray representing the edges
    */
-  private JSONArray edgesToJSON (List<EdgeImpl> edges) {
+  private JSONArray edgesToJSON (List<EdgeIfc> edges) {
 
     JSONArray arr = new JSONArray();
     JSONParser parser = new JSONParser();
 
-    for (EdgeImpl e : edges) {
+    for (EdgeIfc e : edges) {
       try {
         JSONObject jsonVertex = (JSONObject) parser.parse(e.toJSONString());
         arr.add(jsonVertex);
@@ -354,12 +354,12 @@ class VertexImpl implements Vertex, JSONAware, VisitAware {
    * @param it    - Iterator to use to loop through the edges
    * @param from  - True if removing the incoming edges, false for the outgoing edges
    */
-  private void removeEdges (GraphImpl graph, Iterator<EdgeImpl> it, boolean from) {
+  private void removeEdges (GraphIfc graph, Iterator<EdgeIfc> it, boolean from) {
 
     while (it.hasNext()) {
-      EdgeImpl e = it.next();
+      EdgeIfc e = it.next();
 
-      VertexImpl v = from ? e.from() : e.to();
+      VertexIfc v = from ? e.from() : e.to();
       v.removeEdge(e);
       graph.edges().remove(e);
 

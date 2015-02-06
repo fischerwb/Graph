@@ -3,7 +3,6 @@ package Graph;
 public interface VisitAware {
 
   /**
-   *
    * @return True is this object has been visited during the search
    */
   public boolean visited ();

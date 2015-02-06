@@ -4,7 +4,6 @@ import java.awt.*;
 import java.io.Reader;
 import java.io.Writer;
 import java.util.List;
-import java.util.Stack;
 
 public interface Graph {
 
@@ -132,6 +131,6 @@ public interface Graph {
    * @param from - The vertex to get path information for
    * @return The interface to use to find distances and paths to other vertices
    */
-  public ShortestPath getPathInformation(Vertex from);
+  public ShortestPath getPathInformation (Vertex from);
 
 }

@@ -13,23 +13,23 @@ import java.io.Writer;
 import java.util.*;
 import java.util.List;
 
-public class GraphImpl implements Graph, JSONAware {
+class GraphImpl implements GraphIfc {
 
   /**
    * Vector<Vertex> of graph vertices
    */
-  private final Map<String, VertexImpl> vertices;
+  private final Map<String, VertexIfc> vertices;
 
   /**
    * Vector<Edge> of edges in the graph
    */
-  private final Set<EdgeImpl> edges;
+  private final Set<EdgeIfc> edges;
 
 
   /**
    * Construct a new graph without any vertices or edges
    */
-  public GraphImpl () {
+  GraphImpl () {
 
     vertices = new HashMap<>();
     edges = new HashSet<>();
@@ -213,7 +213,7 @@ public class GraphImpl implements Graph, JSONAware {
   public Vertex getVertexAtLocation (Point location) {
 
     if (location != null) {
-      for (VertexImpl v : vertices.values()) {
+      for (VertexIfc v : vertices.values()) {
         if (v.getLocation().equals(location)) {
           return v;
         }
@@ -249,7 +249,7 @@ public class GraphImpl implements Graph, JSONAware {
     }
 
     if (!vertices.containsKey(name)) {
-      VertexImpl v = VertexImpl.createVertex(name, location, data);
+      VertexIfc v = GraphFactory.createVertex(name, location, data);
       vertices.put(name, v);
       return vertices.containsKey(name);
     }
@@ -270,7 +270,7 @@ public class GraphImpl implements Graph, JSONAware {
       throw new IllegalArgumentException("Vertex name cannot be empty");
     }
 
-    VertexImpl v = vertices.get(name);
+    VertexIfc v = vertices.get(name);
 
     if (v == null) {
       return false;
@@ -356,7 +356,7 @@ public class GraphImpl implements Graph, JSONAware {
    * @return true if the Edge exists, false otherwise
    */
   @Override
-  public boolean removeEdge (Vertex from, Vertex to) throws  IllegalArgumentException {
+  public boolean removeEdge (Vertex from, Vertex to) throws IllegalArgumentException {
 
     if (from == null) {
       throw new IllegalArgumentException("from cannot be null");
@@ -367,9 +367,9 @@ public class GraphImpl implements Graph, JSONAware {
     }
 
     boolean removed = false;
-    VertexImpl actualFrom = findVertex(from.getName());
-    VertexImpl actualTo = findVertex(to.getName());
-    EdgeImpl e = actualFrom.find(actualTo);
+    VertexIfc actualFrom = findVertex(from.getName());
+    VertexIfc actualTo = findVertex(to.getName());
+    EdgeIfc e = actualFrom.find(actualTo);
     if (e != null) {
       actualFrom.removeEdge(e);
       actualTo.removeEdge(e);
@@ -404,9 +404,9 @@ public class GraphImpl implements Graph, JSONAware {
       return true;
     }
 
-    VertexImpl v = null;
+    VertexIfc v = null;
     if (startingPoint == null) {
-      Iterator<VertexImpl> it = vertices.values().iterator();
+      Iterator<VertexIfc> it = vertices.values().iterator();
       if (it.hasNext()) {
         v = it.next();
       }
@@ -425,7 +425,7 @@ public class GraphImpl implements Graph, JSONAware {
     }
 
     int visitCount = 0;
-    for (VertexImpl vtx : vertices.values()) {
+    for (VertexIfc vtx : vertices.values()) {
       if (vtx.visited()) {
         visitCount++;
       }
@@ -453,8 +453,8 @@ public class GraphImpl implements Graph, JSONAware {
       throw new IllegalArgumentException("to cannot be null");
     }
 
-    final VertexImpl f = findVertex(from.getName());
-    final VertexImpl t = findVertex(to.getName());
+    final VertexIfc f = findVertex(from.getName());
+    final VertexIfc t = findVertex(to.getName());
 
     if (f == null || t == null) {
       return false;
@@ -462,7 +462,7 @@ public class GraphImpl implements Graph, JSONAware {
 
     final VisitorEX<RuntimeException> visitor = new VisitorEX<RuntimeException>() {
 
-      public void visiting (Graph g, VertexImpl v) throws RuntimeException {
+      public void visiting (Graph g, VertexIfc v) throws RuntimeException {
 
         if (v != null && v.equals(t)) {
           // throw an exception once we find the destination vertex
@@ -482,11 +482,23 @@ public class GraphImpl implements Graph, JSONAware {
   }
 
   /**
+   * Used internally to get the vertices in the graph
+   *
+   * @return The set of the vertices in the graph
+   */
+  @Override
+  public List<Vertex> vertices () {
+
+    return new ArrayList<Vertex>(this.vertices.values());
+  }
+
+  /**
    * Used internally to get the edges in the graph
    *
    * @return The set of the edges in the graph
    */
-  Set<EdgeImpl> edges () {
+  @Override
+  public Set<EdgeIfc> edges () {
 
     return edges;
   }
@@ -500,7 +512,7 @@ public class GraphImpl implements Graph, JSONAware {
     JSONParser parser = new JSONParser();
 
     JSONArray jsonVertices = new JSONArray();
-    for (VertexImpl v : vertices.values()) {
+    for (VertexIfc v : vertices.values()) {
       try {
         JSONObject jsonVertex = (JSONObject) parser.parse(v.toJSONString());
         jsonVertices.add(jsonVertex);
@@ -511,7 +523,7 @@ public class GraphImpl implements Graph, JSONAware {
     obj.put("vertices", jsonVertices);
 
     JSONArray jsonEdges = new JSONArray();
-    for (EdgeImpl e : edges.toArray(new EdgeImpl[edges.size()])) {
+    for (EdgeIfc e : edges.toArray(new EdgeIfc[edges.size()])) {
       try {
         JSONObject jsonEdge = (JSONObject) parser.parse(e.toJSONString());
         jsonEdges.add(jsonEdge);
@@ -528,7 +540,7 @@ public class GraphImpl implements Graph, JSONAware {
    * @param name - The name of the vertex to retrieve
    * @return The vertex with the matching name, null if the vertex isn't in the graph
    */
-  VertexImpl findVertex (String name) {
+  VertexIfc findVertex (String name) {
 
     return (name != null && !name.isEmpty()) ? vertices.get(name) : null;
   }
@@ -555,9 +567,9 @@ public class GraphImpl implements Graph, JSONAware {
 
     boolean added = false;
     if (!from.hasEdge(to)) {
-      VertexImpl actualFrom = findVertex(from.getName());
-      VertexImpl actualTo = findVertex(to.getName());
-      EdgeImpl e = EdgeImpl.createEdge(actualFrom, actualTo, label, weight, directed);
+      VertexIfc actualFrom = findVertex(from.getName());
+      VertexIfc actualTo = findVertex(to.getName());
+      EdgeIfc e = GraphFactory.createEdge(actualFrom, actualTo, label, weight, directed);
       actualFrom.addEdge(e);
       actualTo.addEdge(e);
       edges.add(e);
@@ -585,13 +597,13 @@ public class GraphImpl implements Graph, JSONAware {
    * @param visitor - The visitor whose visiting method is called after visiting a vertex.
    * @throws E if visitor.visiting throws an exception
    */
-  private <E extends Exception> void breadthFirstSearch (VertexImpl v, VisitorEX<E> visitor) throws E {
+  private <E extends Exception> void breadthFirstSearch (VertexIfc v, VisitorEX<E> visitor) throws E {
 
     if (v == null) {
       throw new IllegalArgumentException("v cannot be null");
     }
 
-    LinkedList<VertexImpl> q = new LinkedList<VertexImpl>();
+    LinkedList<VertexIfc> q = new LinkedList<VertexIfc>();
 
     initializeBreadthFirstSearch();
 
@@ -602,8 +614,8 @@ public class GraphImpl implements Graph, JSONAware {
     }
     while (!q.isEmpty()) {
       v = q.removeFirst();
-      for (EdgeImpl e : v.outgoingEdges()) {
-        VertexImpl to = e.to();
+      for (EdgeIfc e : v.outgoingEdges()) {
+        VertexIfc to = e.to();
         if (!to.visited()) {
           q.add(to);
           to.visit();
@@ -623,7 +635,8 @@ public class GraphImpl implements Graph, JSONAware {
    * @return The interface to use to find distances and paths to other vertices
    */
   @Override
-  public ShortestPath getPathInformation(Vertex from) {
+  public ShortestPath getPathInformation (Vertex from) {
+
     if (from == null) {
       throw new IllegalArgumentException("from cannot be null");
     }

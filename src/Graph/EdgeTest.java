@@ -70,39 +70,41 @@ public class EdgeTest extends SimpleBaseTestCase {
   public void testSetLabel () throws Exception {
 
     edge.setLabel(CHANGED_LABEL);
-    Assert.assertEquals("Incorrect edge label", CHANGED_LABEL, edge.getLabel());
+    Assert.assertEquals(CHANGED_LABEL, edge.getLabel());
 
-    edge.setLabel(LABEL);
-    Assert.assertEquals("Incorrect edge label", LABEL, edge.getLabel());
+    // null label isn't allowed, so label should stay the same
+    edge.setLabel(null);
+    Assert.assertEquals(CHANGED_LABEL, edge.getLabel());
   }
 
   public void testGetWeight () throws Exception {
 
-    Assert.assertEquals("Incorrect edge weight", WEIGHT, edge.getWeight());
+    Assert.assertEquals(WEIGHT, edge.getWeight());
   }
 
   public void testSetWeight () throws Exception {
 
     edge.setWeight(CHANGED_WEIGHT);
-    Assert.assertEquals("Incorrect edge weight", CHANGED_WEIGHT, edge.getWeight());
+    Assert.assertEquals(CHANGED_WEIGHT, edge.getWeight());
 
-    edge.setWeight(WEIGHT);
-    Assert.assertEquals("Incorrect edge weight", WEIGHT, edge.getWeight());
+    // weight must be 0 or greater
+    edge.setWeight(-1);
+    Assert.assertEquals(CHANGED_WEIGHT, edge.getWeight());
   }
 
   public void testGetDirected () throws Exception {
 
-    Assert.assertEquals("Incorrect edge directed flag", DIRECTED, edge.getDirected());
+    Assert.assertEquals(DIRECTED, edge.getDirected());
   }
 
   public void testGetTo () throws Exception {
 
-    Assert.assertEquals("Incorrect edge to vertex", TO_NAME, edge.getTo().getName());
+    Assert.assertEquals(TO_NAME, edge.getTo().getName());
   }
 
   public void testGetFrom () throws Exception {
 
-    Assert.assertEquals("Incorrect edge from vertex", FROM_NAME, edge.getFrom().getName());
+    Assert.assertEquals(FROM_NAME, edge.getFrom().getName());
   }
 
 }

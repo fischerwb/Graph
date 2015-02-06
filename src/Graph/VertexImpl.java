@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class VertexImpl implements Vertex, JSONAware, VisitAware {
+class VertexImpl implements Vertex, JSONAware, VisitAware {
 
   private final List<EdgeImpl> incomingEdges;
 
@@ -25,15 +25,8 @@ public class VertexImpl implements Vertex, JSONAware, VisitAware {
 
   private boolean visited;
 
-  /**
-   * Creates a vertex with name n and location l
-   *
-   * @param n - name of vertex
-   * @param l - location of vertex
-   */
-  public VertexImpl (String n, Point l) {
-
-    this(n, l, null);
+  public static VertexImpl createVertex(String n, Point l, String d) {
+    return new VertexImpl(n, l, d);
   }
 
   /**
@@ -43,7 +36,7 @@ public class VertexImpl implements Vertex, JSONAware, VisitAware {
    * @param l - location of vertex
    * @param d - data associated with vertex
    */
-  public VertexImpl (String n, Point l, String d) {
+  private VertexImpl (String n, Point l, String d) {
 
     incomingEdges = new ArrayList<>();
     outgoingEdges = new ArrayList<>();
@@ -137,7 +130,7 @@ public class VertexImpl implements Vertex, JSONAware, VisitAware {
   @Override
   public void setLocation (Point l) {
 
-    location = l;
+    location = (l != null) ? l : location;
   }
 
   /**
@@ -181,7 +174,7 @@ public class VertexImpl implements Vertex, JSONAware, VisitAware {
   @Override
   public Edge findEdge (Vertex v) {
 
-    return find(v);
+    return (v != null) ? find(v) : null;
   }
 
   /**
@@ -220,9 +213,11 @@ public class VertexImpl implements Vertex, JSONAware, VisitAware {
    */
   EdgeImpl find (Vertex v) {
 
-    for (EdgeImpl e : outgoingEdges) {
-      if (e.getTo().equals(v)) {
-        return e;
+    if (v != null) {
+      for (EdgeImpl e : outgoingEdges) {
+        if (e.getTo().equals(v)) {
+          return e;
+        }
       }
     }
 
@@ -239,12 +234,14 @@ public class VertexImpl implements Vertex, JSONAware, VisitAware {
    */
   boolean addEdge (EdgeImpl e) {
 
-    if (e.getFrom().equals(this)) {
-      outgoingEdges.add(e);
-    } else if (e.getTo().equals(this)) {
-      incomingEdges.add(e);
-    } else {
-      return false;
+    if (e != null) {
+      if (e.getFrom().equals(this)) {
+        outgoingEdges.add(e);
+      } else if (e.getTo().equals(this)) {
+        incomingEdges.add(e);
+      } else {
+        return false;
+      }
     }
 
     return true;
@@ -260,12 +257,14 @@ public class VertexImpl implements Vertex, JSONAware, VisitAware {
 
   boolean removeEdge (EdgeImpl e) {
 
-    if (e.getFrom().equals(this)) {
-      outgoingEdges.remove(e);
-    } else if (e.getTo().equals(this)) {
-      incomingEdges.remove(e);
-    } else {
-      return false;
+    if (e != null) {
+      if (e.getFrom().equals(this)) {
+        outgoingEdges.remove(e);
+      } else if (e.getTo().equals(this)) {
+        incomingEdges.remove(e);
+      } else {
+        return false;
+      }
     }
 
     return true;
@@ -279,8 +278,10 @@ public class VertexImpl implements Vertex, JSONAware, VisitAware {
    */
   boolean removeEdges (GraphImpl graph) {
 
-    removeEdges(graph, outgoingEdges.iterator(), false);
-    removeEdges(graph, incomingEdges.iterator(), true);
+    if (graph != null) {
+      removeEdges(graph, outgoingEdges.iterator(), false);
+      removeEdges(graph, incomingEdges.iterator(), true);
+    }
 
     return outgoingEdges.isEmpty() && incomingEdges.isEmpty();
   }

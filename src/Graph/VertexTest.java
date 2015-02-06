@@ -58,13 +58,12 @@ public class VertexTest extends SimpleBaseTestCase {
 
     from.setLocation(CHANGED_FROM_LOCATION);
     assertEquals(CHANGED_FROM_LOCATION, from.getLocation());
-    from.setLocation(FROM_LOCATION);
-    assertEquals(FROM_LOCATION, from.getLocation());
 
     to.setLocation(CHANGED_TO_LOCATION);
     assertEquals(CHANGED_TO_LOCATION, to.getLocation());
-    to.setLocation(TO_LOCATION);
-    assertEquals(TO_LOCATION, to.getLocation());
+
+    to.setLocation(null);
+    assertEquals(CHANGED_TO_LOCATION, to.getLocation());
   }
 
   public void testHasEdge () throws Exception {
@@ -73,7 +72,7 @@ public class VertexTest extends SimpleBaseTestCase {
     assertFalse(to.hasEdge(from));
   }
 
-  public void testFindEdge () throws Exception {
+  public void testFind () throws Exception {
 
     Edge e = from.findEdge(to);
     assertNotNull(e);
@@ -83,19 +82,9 @@ public class VertexTest extends SimpleBaseTestCase {
     assertNull(e);
   }
 
-  public void testFind () throws Exception {
-
-    EdgeImpl e = from.find(to);
-    assertNotNull(e);
-    assertEquals(LABEL, e.getLabel());
-
-    e = to.find(from);
-    assertNull(e);
-  }
-
   public void testAddRemoveEdge () throws Exception {
 
-    EdgeImpl newEdge = new EdgeImpl(to, from, CHANGED_LABEL, CHANGED_WEIGHT, DIRECTED);
+    EdgeImpl newEdge = EdgeImpl.createEdge(to, from, CHANGED_LABEL, CHANGED_WEIGHT, DIRECTED);
     from.addEdge(newEdge);
     to.addEdge(newEdge);
 

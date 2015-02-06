@@ -80,4 +80,11 @@ public class GraphJSONTest extends TestCase {
     Assert.assertEquals(8d, sp.distanceTo(h));
 
   }
+
+  public void testBadJSON () throws Exception {
+    FileReader in = new FileReader("json/BadGraph.json");
+    in.close();
+    assertFalse(graph.load(in));
+  }
+
 }

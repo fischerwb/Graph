@@ -3,7 +3,7 @@ package Graph;
 import org.json.simple.JSONAware;
 import org.json.simple.JSONObject;
 
-public class EdgeImpl implements Edge, JSONAware {
+class EdgeImpl implements Edge, JSONAware {
 
   private final VertexImpl from;
 
@@ -15,15 +15,8 @@ public class EdgeImpl implements Edge, JSONAware {
 
   private final boolean directed;
 
-  /**
-   * Create a zero weight edge between f and t
-   *
-   * @param f - The starting vertex
-   * @param t - The ending vertex
-   */
-  public EdgeImpl (VertexImpl f, VertexImpl t) {
-
-    this(f, t, "", 0, false);
+  public static EdgeImpl createEdge(VertexImpl f, VertexImpl t, String l, int w, boolean d) {
+    return new EdgeImpl(f, t, l, w, d);
   }
 
   /**
@@ -34,12 +27,12 @@ public class EdgeImpl implements Edge, JSONAware {
    * @param w - The weight of the edge
    * @param d - True if the edge has a direction, false if bidirectional
    */
-  public EdgeImpl (VertexImpl f, VertexImpl t, String l, int w, boolean d) {
+  private EdgeImpl (VertexImpl f, VertexImpl t, String l, int w, boolean d) {
 
     from = f;
     to = t;
     label = (l != null) ? l : "";
-    weight = (w >= 0) ? w : 1;
+    weight = (w >= 0) ? w : 0;
     directed = d;
   }
 
@@ -196,8 +189,12 @@ public class EdgeImpl implements Edge, JSONAware {
     JSONObject obj = new JSONObject();
 
     obj.put("label", label);
-    obj.put("from", from.getName());
-    obj.put("to", to.getName());
+    if (from != null) {
+      obj.put("from", from.getName());
+    }
+    if (to != null) {
+      obj.put("to", to.getName());
+    }
     obj.put("weight", weight);
     obj.put("directed", directed);
 

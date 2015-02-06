@@ -31,9 +31,9 @@ public class SimpleBaseTestCase extends TestCase {
 
     super.setUp();
 
-    from = new VertexImpl(FROM_NAME, FROM_LOCATION, "");
-    to = new VertexImpl(TO_NAME, TO_LOCATION, "");
-    edge = new EdgeImpl(from, to, LABEL, WEIGHT, DIRECTED);
+    from = VertexImpl.createVertex(FROM_NAME, FROM_LOCATION, "");
+    to = VertexImpl.createVertex(TO_NAME, TO_LOCATION, "");
+    edge = EdgeImpl.createEdge(from, to, LABEL, WEIGHT, DIRECTED);
 
     from.addEdge(edge);
     to.addEdge(edge);

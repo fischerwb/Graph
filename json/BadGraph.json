@@ -1,0 +1,16 @@
+{
+  "vertices":[
+    {
+      "location":{"x":10, "y":10},
+      "name":"A"
+    }
+  "edges":[
+    {
+      "from":"A",
+      "to":"B",
+      "label":"A->B",
+      "weight":3,
+      "directed":true
+    },
+  ]
+}
